@@ -1,7 +1,7 @@
 import { Button, TextField, TextFieldVariants } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useSearchParams } from "react-router";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent } from "react";
 
 interface SearchFieldProps {
   placeholder: string;
@@ -12,23 +12,21 @@ export const SearchField = ({
   placeholder,
   variant = "outlined",
 }: SearchFieldProps) => {
-  // Not ideal to have both state and URL as source of truth.
-  // Needed to have disabled button when searchValue is empty.
-  const [searchValue, setSearchValue] = useState<string>("");
-
-  const [, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const handleSearchSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!searchValue) return;
+    // @ts-expect-error - TS is not able to infer the type of event.target[0].
+    const value = event.target[0].value;
+    if (!value) return;
 
-    setSearchParams({ vulnerability: searchValue });
+    setSearchParams({ search_query: value });
   };
 
-  useEffect(() => {
-    // Clear search field when navigating away from the page.
-    return () => setSearchParams({});
-  }, []);
+  //   useEffect(() => {
+  //     // Clear search field when navigating away from the page.
+  //     return () => setSearchParams({});
+  //   }, []);
 
   return (
     <form onSubmit={handleSearchSubmit}>
@@ -36,9 +34,8 @@ export const SearchField = ({
         id="outlined-basic"
         placeholder={placeholder}
         variant={variant}
-        onChange={(e) => setSearchValue(e.target.value)}
       />
-      <Button variant="contained" type="submit" disabled={!searchValue}>
+      <Button variant="contained" type="submit" disabled={!searchParams}>
         <SearchIcon />
       </Button>
     </form>

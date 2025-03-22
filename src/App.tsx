@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router";
+import { BrowserRouter, Route, Routes } from "react-router";
 import "./App.css";
 import { Dashboard } from "./components/Dashboard";
 import { VulnerabilityView } from "./components/VulnerabilityView";
@@ -12,7 +12,7 @@ function App() {
           path="/dashboard/vulnerabilities/:vulnerabilityId"
           element={<VulnerabilityView />}
         />
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        {/* <Route path="*" element={<Navigate to="/dashboard" replace />} /> */}
       </Routes>
     </BrowserRouter>
   );
